@@ -1,0 +1,49 @@
+public class HelloA{
+	//构造方法
+	public HelloA(){
+	System.out.println("Hello A!父类构造方法");
+	}
+	//非静态代码块
+	{
+		System.out.println("i'm A class.父类非静态代码块");
+	}
+	//静态代码块
+	{
+		System.out.println("static A 父类静态代码块");
+	}
+	
+}
+
+
+
+public class HelloB extends HelloA{
+		//构造方法
+		public HelloB(){
+			System.out.println("Hello B!构造方法");
+		}
+		//非静态代码块
+		{
+			System.out.println("i'm B class.非静态代码块");
+		}
+		//静态代码块
+		{
+			System.out.println("static B 静态代码块");
+		}
+		public static void main(String[] args){
+			System.out.println("-----start-----");
+			new HelloB();
+			new HelloB();
+			System.out.println("-----start-----");
+		}
+	}
+	
+	//输出结果为：父类非静态代码块
+	//父类静态代码块
+	//父类构造方法
+	//子类非静态代码块
+	//子类静态代码块
+	//子类构造方法s
+	
+	////构造块(定义在类中，不加任何修饰符)，构造块先于构造方法执行
+	//静态块(非主类中)，无论产生多少实例化对象，只执行一次，优于构造块执行
+	//静态块(主类中)，优于main方法执行。
