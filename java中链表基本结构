@@ -1,0 +1,42 @@
+/链表基本结构
+class Node{
+	private Object data;
+	private Node next;//执行下一节点
+	public Node(Object data){
+		this.data=data;
+	}
+	public void setData(Object data){
+		this.data=data;
+	}
+	public Object getData(){
+		return this.data;
+	}
+	public void setNext(Node next){
+		this.next=next;
+	}
+	public Node getNext(){
+		return this.next;
+	}
+}
+
+public class Test{
+	public static void main(String [] args)throws Exception{
+		//封装节点
+		Node root=new Node("火车头");
+		Node n1=new Node("车厢a");
+		Node n2=new Node("车厢b");
+		Node n3=new Node("车厢c");
+		//设置车厢关系，即挂载
+		root.setNext(n1);
+		n1.setNext(n2);
+		n2.setNext(n3);
+		//依次取出节点
+		getNodeData(root);
+	}
+	public static void getNodeData(Node node){
+		if(node!=null){
+		System.out.println(node.getData());
+		getNodeData(node.getNext());
+		}
+	}
+}
