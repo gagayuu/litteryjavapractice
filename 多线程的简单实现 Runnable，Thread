@@ -1,0 +1,126 @@
+//定义线程的主体类
+//class MyThread extends Thread{ //线程主体类
+//	private String title;
+//	public MyThread(String title){
+//		this.title=title;
+//	}
+	
+//	@Override
+//	public void run(){//所有线程从此处开始执行
+//		for(int i=0;i<10;i++){
+//			System.out.println(this.title+",i="+i);
+//		}
+//	}
+	
+//}
+
+
+//public class TestThread{
+//	public static void main(String[] args){
+		//不能直接调用run()方法
+//		MyThread myt1=new MyThread("Thread1");
+//		MyThread myt2=new MyThread("Thread2");
+//		MyThread myt3=new MyThread("Thread3");
+//		myt1.start();
+//		myt2.start();
+//		myt3.start(); //多线程的执行顺序先后不固定，根据电脑cpu来分配
+//	}
+//}
+//}
+
+
+//利用Runnable接口实现线程主体类
+/* class MyThread implements Runnable{//线程主体类
+	private String title;
+	public MyThread(String title){
+		this.title=title;
+	}
+	public void run(){//所有线程从此处开始执行
+		for(int i=0;i<10;i++){
+			System.out.println(this.title+",i="+i);
+		}
+	}
+	
+}	
+
+public class TestThread{
+	public static void main(String[] args){
+		MyThread my1=new MyThread("t1");
+		MyThread my2=new MyThread("t2");
+		MyThread my3=new MyThread("t3");
+		new Thread(my1).start();
+		new Thread(my2).start();
+		new Thread(my3).start();
+	}
+} */
+
+
+//使用匿名内部类进行Runnable对象创建
+/* public class TestThread{
+	public static void main(String[] args){
+		new Thread(new Runnable(){
+			@Override
+			public void run(){
+				System.out.println("Hello");
+			}
+		}).start();
+	}
+}
+	 */
+	
+
+
+//使用Lamdba表达式进行Runnable对象创建
+ /* public class TestThread{
+	 public static void main(String[] args){
+		 Runnable runnable=()-> System.out.println("Hello");
+		 new Thread(runnable).start();
+	 }
+	 
+ }	
+	 */
+	
+	
+//使用Thread实现数据共享(产生若干线程进行同一数据的处理操作)
+/* class MyThread extends Thread{
+	private int tickets=10;//一共十张票
+	public void run(){
+		while(tickets>0){
+			System.out.println("剩余票数："+this.tickets--);
+		}
+	}
+}
+public class TestThread{
+	public static void main(String[] args){
+		new MyThread().start();
+		new MyThread().start();
+		new MyThread().start();
+	}
+		
+}//启动三个多线程实现卖票处理，结果变为了卖各自的票
+ */
+
+	
+
+//使用Runnable实现共享
+/* class MyThread implements Runnable{
+	private int tickets=10;
+	@Override
+	public void run(){
+		while(tickets>0){
+			System.out.println("剩余票数"+this.tickets--);
+		}
+	}
+	
+}
+
+public class TestThread{
+	public static void main(String[] args){
+		MyThread mt=new MyThread();
+		new Thread(mt).start();
+		new Thread(mt).start();
+		new Thread(mt).start();
+	}
+
+}//Runnable实现的多线程的程序类可以更好地描述出程序共享的概念
+ */
