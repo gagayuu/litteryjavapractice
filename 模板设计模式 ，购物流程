@@ -1,0 +1,98 @@
+public class TestTemplate{
+	
+	public static void main(String[] args){
+		ShoppingOnline shopping=new Tmall();
+		ShoppingOnline shopping1=new JD();
+		shopping.isService(false);
+		shopping.pay();
+		System.out.println("---------------------");
+		shopping1.isService(true);
+		shopping1.pay();
+		
+	}
+	
+}
+
+abstract class ShoppingOnline{
+	boolean flag;
+	public abstract void scanGoods();//浏览商品
+	public abstract void chooseGoods();//选择商品
+	public abstract void customerService();//客服服务
+	public abstract void express();//快递服务
+	public abstract void denominate();//结算
+	public abstract void viewOrders();//查看订单
+	public void pay(){//付款
+		this.scanGoods();
+		this.chooseGoods();
+		if(this.isService(flag)){
+			this.customerService();
+		}
+		this.express();
+		this.denominate();
+		this.viewOrders();
+	}
+	public boolean isService(boolean flag){
+		 return flag;
+	}
+}
+
+class JD extends  ShoppingOnline{
+	public void scanGoods(){
+		System.out.println("打开天猫浏览商品");
+	}
+	
+	public void chooseGoods(){
+		System.out.println("选择一些你想要购买的商品");
+	}
+	
+	public void customerService(){
+		System.out.println("对商品有任何疑惑可以联系客服");
+	}
+	
+	public void express(){
+		System.out.println("天猫快递承诺24小时内发货");
+	}
+	
+	public void denominate(){
+		System.out.println("选择你要购买的商品查看需付金额");
+		System.out.println("选择付款方式:余额/银行卡/余额宝/花呗");
+	}
+
+	public void viewOrders(){
+		System.out.println("付款成功，查看订单");
+	}
+	
+	
+}
+
+
+
+class Tmall extends  ShoppingOnline{
+	public void scanGoods(){
+		System.out.println("打开京东浏览商品");
+	}
+	
+	public void chooseGoods(){
+		System.out.println("选择一些你想要购买的商品");
+	}
+	
+	public void customerService(){
+		System.out.println("对商品有任何疑惑可以联系客服");
+	}
+	
+	public void express(){
+		System.out.println("京东快递一体化物流，有速度更有温度");
+	}
+	
+	public void denominate(){
+		System.out.println("选择你要购买的商品查看需付金额");
+		System.out.println("选择付款方式:余额/银行卡/余额宝/花呗/京东白条");
+	}
+
+	public void viewOrders(){
+		System.out.println("付款成功，查看订单");
+	}
+	
+	
+}
+
