@@ -1,0 +1,155 @@
+package bitehomework;
+
+//String类扩展功能实现
+public class Strings{
+    public static void main(String[] args) {
+//       System.out.println(repeat('a',5));
+//       System.out.println(fillBefore("abc",'A',3));
+//       System.out.println(fillAfter("abc", 'A', 5));
+//       System.out.println(removeAll("aa-bb-cc-dd", "-"));
+//       System.out.println(reverse("abcd"));
+//       System.out.println(reverse1("abcd"));
+//       System.out.println(repeat1('a',5));
+        System.out.println(fillAfter1("abc",'A',5));
+
+    }
+
+    /**
+     * 重复某个字符
+     * 例如：
+     * 'a' 5   => "aaaaa"
+     * 'a' -1  => ""
+     * @param c     被重复的字符
+     * @param count 重复的数目，如果小于等于0则返回""
+     * @return 重复字符字符串
+     */
+    public static String repeat(char c, int count) {
+        if(count<=0){
+            return "";
+        }
+        String str=c+"";
+       char[] ch=new char[count];
+       for(int i=0;i<count;i++){
+            str.getChars(0,1,ch,i);
+       }
+       String str1=String.valueOf(ch);
+       return str1;
+
+
+    }
+
+    public static String repeat1(char c,int count){
+        if(count<=0){
+            return "";
+        }
+        String str=c+"";
+        StringBuilder sb=new StringBuilder(str);
+        for(int i=0;i<count-1;i++){
+            sb.append(c);
+        }
+        return sb.toString();
+
+    }
+
+
+    /**
+     * 将已有字符串填充为规定长度，如果已有字符串超过这个长度则返回这个字符串
+     * 字符填充于字符串前
+     * 例如：
+     * "abc" 'A' 5  => "AAabc"
+     * "abc" 'A' 3  => "abc"
+     * @param str        被填充的字符串
+     * @param filledChar 填充的字符
+     * @param len        填充长度
+     * @return 填充后的字符串
+     */
+    public static String fillBefore(String str, char filledChar, int len) {
+        if(str.length() >= len){
+            return str;
+        }
+        char[] ch=new char[len-str.length()];
+        for(int i=0;i<ch.length;i++){
+            ch[i]=filledChar;
+        }
+        String str1=new String(ch);
+        return str1+str;
+    }
+
+    /**
+     * 将已有字符串填充为规定长度，如果已有字符串超过这个长度则返回这个字符串<br>
+     * 字符填充于字符串后
+     * 例如：
+     * "abc" 'A' 5  => "abcAA"
+     * "abc" 'A' 3  => "abc"
+     *
+     * @param str        被填充的字符串
+     * @param filledChar 填充的字符
+     * @param len        填充长度
+     * @return 填充后的字符串
+     */
+    public static String fillAfter(String str, char filledChar, int len) {
+        if(str.length() >= len){
+            return str;
+        }
+        char[] ch=new char[len-str.length()];
+        for(int i=0;i<ch.length;i++){
+            ch[i]=filledChar;
+        }
+        String str1=new String(ch);
+        return str+str1;
+
+    }
+
+    public static String  fillAfter1(String str, char filledChar, int len){
+        if(str.length()>=len){
+            return str;
+        }
+        StringBuilder sb=new StringBuilder(str);
+        for(int i=0;i<(len-str.length());i++){
+           sb.append(filledChar);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 移除字符串中所有给定字符串
+     * 例：removeAll("aa-bb-cc-dd", "-") => aabbccdd
+     *
+     * @param str         字符串
+     * @param strToRemove 被移除的字符串
+     * @return 移除后的字符串
+     */
+    public static String removeAll(CharSequence str, CharSequence strToRemove) {
+      String before=str.toString();
+      String remove=strToRemove.toString();
+      String after=before.replaceAll(remove,"");
+      return after;
+    }
+
+    /**
+     * 反转字符串
+     * 例如：abcd => dcba
+     *
+     * @param str 被反转的字符串
+     * @return 反转后的字符串
+     */
+    public static String reverse(String str) {
+        char[] ch=str.toCharArray();
+        int left=0;
+        int right=ch.length-1;
+        while(left<right){
+            char tmp=ch[left];
+            ch[left]=ch[right];
+            ch[right]=tmp;
+            left++;
+            right--;
+        }
+        String reverse=new String(ch);
+        return reverse;
+    }
+
+    public static String reverse1(String str){
+        return new StringBuilder(str).reverse().toString();
+
+    }
+}
