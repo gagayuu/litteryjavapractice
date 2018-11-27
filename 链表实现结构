@@ -1,0 +1,277 @@
+package bitehomework;
+
+/**
+ * Author:gagayu
+ * Created:2018/11/27
+ */
+public interface ILink {
+    /**
+     * 链表增加节点操作
+     * data 节点内容
+     */
+    boolean add(Object data);
+
+    /**
+     * 判断指定内容节点在链表中是否存在
+     * data 要判断的内容
+     * return 要返回找到的节点
+     */
+    int contains(Object data);
+
+    /**删除指定内容节点
+     * data
+     * return
+     */
+    boolean remove(Object data);
+
+    /**根据指定下标返回节点内容
+     * index 索引下标
+     * new data 替换后的内容
+     * return 替换之前的节点内容
+     */
+    Object set(int index,Object newData);
+
+    /**根据指定下标返回节点内容
+     * index
+     *
+     */
+    Object get(int index);
+
+    /**
+     * 链表清空
+     */
+    void clear();
+
+    /**将链表转为数组
+     * return 返回所有节点内容
+     */
+    Object[] toArray();
+
+    /**
+     * 链表长度
+     */
+    int size();
+
+    /**
+     * 遍历链表
+     */
+    void printLink();
+
+
+
+}
+
+
+
+package bitehomework;
+
+/**
+ * Author:gagayu
+ * Created:2018/11/27
+ */
+public class ILinkImp implements ILink {
+    private Node head;
+    private Node tail;
+    private int size;
+
+//    public ILinkImp(){
+//        this.head=null;
+//        this.tail=null;
+//        this.size=0;
+//    }
+
+    public ILinkImp(Object data) {
+       Node node=new Node(data,null);
+       this.head=node;
+       this.tail=node;
+       this.head.setNext(this.tail);
+       this.size++;
+    }
+
+    @Override
+    public boolean add(Object data) {
+        Node node=new Node(data,null);
+        this.size++;
+        this.tail.setNext(node);
+        this.tail=node;
+
+        return true;
+    }
+
+    @Override
+    public int contains(Object data) {
+        Node curr=head;
+        int index=-1;
+        while(curr!=null){
+            index++;
+            Object e=curr.getData();
+            if(e.equals(data)){
+                return index;
+            }
+            curr= curr.getNext();
+        }
+        return -1;
+    }
+
+    @Override
+    public boolean remove(Object data) {
+        Node curr=head;
+        Node prev=head;
+        while(curr!=null){
+            Object e=curr.getData();
+            if(e.equals(data)){
+                prev.setNext(curr.getNext());
+                return true;
+            }
+            prev=curr;
+            curr=curr.getNext();
+        }
+        return false;
+    }
+
+    @Override
+    public Object set(int index, Object newData) {
+        if(index==-1){
+            return -1;
+        }
+        if(index>size-1){
+            return null;
+        }
+        Node curr=head;
+        int currINdex=-1;
+        while(curr!=null){
+            currINdex++;
+            if(currINdex==index) {
+                Object oldData=curr.getData();
+                curr.setData(newData);
+                return oldData;
+            }
+            curr=curr.getNext();
+        }
+        return null;
+    }
+
+    @Override
+    public Object get(int index) {
+        if(index==-1){
+            return null;
+        }
+        if(index>size-1){
+            return null;
+        }
+        Node curr=head;
+        int currIndex=-1;
+        while(curr!=null){
+            currIndex++;
+            if(currIndex==index){
+                return curr.getData();
+            }
+            curr=curr.getNext();
+        }
+        return null;
+    }
+
+    @Override
+    public void clear() {
+        this.head=null;
+        this.tail=null;
+        this.size=0;
+    }
+
+    @Override
+    public Object[] toArray() {
+        Object[] values=new Object[this.size];
+        Node curr=head;
+        int currIndex=-1;
+        while(curr!=null){
+            currIndex++;
+            values[currIndex]=curr.getData();
+            curr=curr.getNext();
+        }
+        return values;
+    }
+
+    @Override
+    public int size() {
+        return this.size;
+    }
+
+    @Override
+    public void printLink() {
+        Node curr=head;
+        while(curr!=null){
+            System.out.print(curr.getData());
+            curr=curr.getNext();
+            if(curr!=null){
+                System.out.print(" ->");
+            }
+        }
+        System.out.println();
+
+    }
+}
+
+
+
+
+package bitehomework;
+
+/**
+ * Author:gagayu
+ * Created:2018/11/27
+ */
+public class TestILink {
+    public static void main(String[] args) {
+        ILink link = new ILinkImp("01");
+        link.add("02");
+        link.add("03");
+        link.add("04");
+        link.printLink();
+        System.out.println(link.contains("02"));
+        System.out.println(link.contains("05"));
+        System.out.println(link.size());
+        //link.remove("03");
+        //link.set(3,"004");
+        System.out.println( link.get(3));
+        link.printLink();
+         Object[] values=link.toArray();
+         for(Object val:values){
+             System.out.println(val);
+         }
+
+    }
+}
+
+
+package bitehomework;
+
+/**
+ * Author:gagayu
+ * Created:2018/11/27
+ */
+public class Node {
+    private Object data;//车厢数据
+    private Node next;//下一节车厢,next指向下一节车厢的地址
+
+    public Node(Object data, Node next) {
+        this.data = data;
+        this.next = next;
+    }
+
+    public Object getData() {
+        return data;
+    }
+
+    public Node getNext() {
+        return next;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
+    }
+
+    public void setNext(Node next) {
+        this.next = next;
+    }
+}
+
