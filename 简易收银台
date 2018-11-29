@@ -1,0 +1,365 @@
+package bite.homework;
+
+import java.util.Scanner;
+
+
+public class CheckStand {
+
+
+    public static void main(String[] args) {
+        menu();
+
+        while (true) {
+            Scanner in = new Scanner(System.in);
+            String input = in.nextLine();
+            switch (input.trim()) {
+                case "P":
+                case "p":
+                    Goods[] goods = Goods.getGoods();
+                    for (Goods tmp : goods) {
+                        if (!("--未上架".equals(tmp.getName()))) {
+                            payMenu();
+                        }
+                    }
+                    System.out.println("当前没有产品上架，请待上架产品后使用");
+                    break;
+                case "S":
+                case "s":
+                    settingsMenu();
+                    break;
+                case "A":
+                case "a":
+                    about();
+                    break;
+                case "Q":
+                case "q":
+                    System.exit(0);
+                default:
+                    System.out.println("**************************************************");
+                    System.out.println("请输入正确的指令");
+                    menu();
+                    break;
+
+            }
+        }
+
+    }
+
+    public static void menu() {
+        System.out.println("****************欢迎使用简易收银台****************");
+        System.out.println("\t\t\t[P] 使用 [S] 设置 [A] 关于 [Q] 退出\t\t\t");
+        System.out.println("\t\t\t\t\t输入：P S A Q 进入操作\t\t\t\t");
+        System.out.println("**************************************************");
+    }
+
+    public static void payMenu() {
+        System.out.println("*********************买单功能*********************");
+        System.out.println("\t[S]查看 [A] 下单 [C] 取消 [L]浏览  [R]返回 \t\t");
+        System.out.println("\t\t\t\t输入：S A C L R 进入操作\t\t\t\t");
+        System.out.println("**************************************************");
+        while (true) {
+            Scanner in = new Scanner(System.in);
+            String input = in.nextLine();
+            switch (input.trim()) {
+                case "S":
+                case "s":
+                    Goods.print();
+                    break;
+                case "A":
+                case "a":
+                    placeOrder();
+                    break;
+                case "C":
+                case "c":
+                    cancelOrder();
+                    break;
+
+                case "L":
+                case "l":
+                    printBill();
+                    break;
+
+                case "R":
+                case "r": {
+                    return;
+                }
+                default:
+                    break;
+
+
+            }
+
+        }
+    }
+
+
+    public static void placeOrder() {
+        System.out.println("请按照如下格式输入（商品编号 数量）：1 2");
+        Goods.print();
+        Scanner in = new Scanner(System.in);
+        String input = in.nextLine();
+        String[] input1 = input.split(" ");
+        Goods[] goods = Goods.getGoods();
+        Goods good = goods[(Integer.parseInt(input1[0])) - 1];
+        if (Integer.parseInt(input1[0]) == good.getNo()) {
+            Bill.setPlaceValue(Integer.parseInt(input1[1]) * good.getPrice());
+            Bill.setSum(Bill.getPlaceValue());
+        }
+        System.out.println("需付款：" + Bill.getSum() + "元");
+        System.out.println("如果需要继续购买，请输入[A]，否则输入[S]查看 [C]取消 [L]浏览 [R]返回");
+    }
+
+
+    public static void cancelOrder() {
+        System.out.println("请按照如下格式输入（商品编号 要取消的商品数量）：1 1");
+        Goods.print();
+        Scanner in = new Scanner(System.in);
+        String input = in.nextLine();
+        String[] input1 = input.split(" ");
+        Goods[] goods = Goods.getGoods();
+        Goods good = goods[Integer.parseInt(input1[0]) - 1];
+        if (Integer.parseInt(input1[0]) == good.getNo()) {
+            Bill.setCancelValue(Integer.parseInt(input1[1]) * good.getPrice());
+            Bill.setCancel(Bill.getCancelValue());
+        }
+
+        System.out.println("减少" + Bill.getCancel() + "元");
+
+    }
+
+    public static void settingsMenu() {
+        System.out.println("*********************设置功能*********************");
+        System.out.println("\t[S]查看 [A] 上架 [D] 下架  [Q] 退出\t\t");
+        System.out.println("\t\t\t\t输入：S A D L Q 进入操作\t\t\t\t");
+        System.out.println("**************************************************");
+        while (true) {
+            Scanner in = new Scanner(System.in);
+            String input = in.nextLine();
+
+            switch (input) {
+                case "A":
+                case "a":
+                    System.out.println("请按照如下格式输入：（1 餐巾纸 1.0）：");
+                    Scanner add = new Scanner(System.in);
+                    String[] addArray = add.nextLine().split(" ");
+                    Goods good = new Goods(Integer.parseInt(addArray[0]), addArray[1], Double.parseDouble(addArray[2]));
+                    if (good == null) {
+                        System.out.println("输入商品不能为空");
+                    }
+                    if (addArray.length == 3 && addArray != null) {
+                        Goods.addGoods(good);
+                        Goods.print();
+                    }
+                    System.out.println("如果需要继续上架商品请输入[A],否则输入[S]查看 [D]下架 [Q]退出");
+                    break;
+
+                case "D":
+                case "d":
+                    System.out.println("请输入要删除商品的编号");
+                    Scanner delete = new Scanner(System.in);
+                    int deleteNo = delete.nextInt();
+                    Goods good1 = new Goods(deleteNo);
+                    if (deleteNo > Goods.getLINE()) {
+                        System.out.println("输入编号需存在");
+                    }
+                    if (deleteNo == good1.getNo()) {
+                        Goods.deleteGoods(good1);
+                        Goods.print();
+                    }
+                    break;
+
+                case "S":
+                case "s":
+                    Goods.print();
+                    break;
+
+                case "Q":
+                case "q":
+                    System.out.println("退出设置功能,进入买单功能");
+                    payMenu();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+    }
+
+
+    public static void about() {
+        System.out.println("----------关于---------------");
+        System.out.println("---名称：简易收银台-----------");
+        System.out.println("---作者：嘎嘎-----------------");
+        System.exit(0);
+    }
+
+
+    public static void printBill() {
+        double sum= Bill.getSum()-Bill.getCancel();
+
+        System.out.println("**************************************");
+        System.out.println("总价：" + sum + "元");
+        System.out.println("******谢谢惠顾，欢迎下次光临************");
+        System.exit(0);
+
+    }
+
+
+}
+
+
+
+package bite.homework;
+
+public class Goods {
+
+
+    private static Goods[] goods=initGoods(); //储存商品的数组
+
+    private int no;//编号
+    private String name;//名称
+    private  double price;//单价
+
+
+    private static final int LINE = 10;//最大商品数量
+    public static int getLINE() { return LINE;
+    }
+
+
+    public Goods() {
+    }
+
+    public Goods(int no) {
+        this.no = no;
+    }
+
+    public Goods(int no, String name, double price) {
+        this.no = no;
+        this.name = name;
+        this.price = price;
+    }
+
+    public int getNo() { return no;
+    }
+
+    public String getName() { return name;
+    }
+
+    public  double getPrice() { return price;
+    }
+
+    public void setNo(int no) { this.no = no;
+    }
+
+    public void setName(String name) { this.name = name;
+    }
+
+    public void setPrice(double price) { this.price = price;
+    }
+
+    public static Goods[] getGoods() {
+        return goods;
+    }
+
+    @Override
+    public String toString(){
+        return String.format("[%2d] %s %.2f",this.getNo(),this,getName(),this.getPrice());
+    }
+
+    public static Goods[] initGoods() {//初始化商品数组
+        System.out.println("*********************商品清单*********************");
+        System.out.println("\t\t编号\t\t产品名称\t\t单价");
+
+        Goods[] goods= new Goods[LINE];
+        for (int i = 0; i < goods.length; i++) {
+            goods[i]=new Goods(i+1,"--未上架",0.0);
+        }
+        return goods;
+    }
+
+    public static void addGoods(Goods good) {//添加一个商品
+
+        for(int i=0;i<goods.length;i++){
+            Goods tmp=goods[i];
+            if(tmp.getNo()==good.getNo()){
+                tmp.setName(good.getName());
+                tmp.setPrice(good.getPrice());
+                break;
+            }
+        }
+
+    }
+
+    public static void deleteGoods(Goods good){
+
+        for(int i=0;i<goods.length;i++){
+            Goods tmp=goods[i];
+            if(tmp.getNo()==good.getNo()){
+                tmp.setName("--未上架");
+                tmp.setPrice(0.0);
+                break;
+            }
+        }
+    }
+
+    public static void print() {
+        System.out.println("*********************商品清单*********************");
+        System.out.println("\t编号\t产品名称\t\t单价");
+        for (int i = 0; i < goods.length; i++) {
+            Goods tmp=goods[i];
+            System.out.println("\t"+tmp.getNo()+"\t"+tmp.getName()+"\t\t"+tmp.getPrice());
+        }
+
+    }
+
+}
+
+
+
+package bite.homework;
+
+/**
+ * Author:gagayu
+ * Created:2018/11/28
+ */
+public class Bill {
+    private static  double placeValue;//每次下单商品价钱
+    private static double  cancelValue;//，每次取消商品价钱
+    private static double sum;//商品总价
+    private static double cancel;//取消商品总价
+
+    public static double getCancel() {
+        return cancel;
+    }
+
+    public static void setCancel(double cancel) {
+        Bill.cancel+=Bill.cancelValue;
+    }
+
+    public static double getSum() {
+        return sum;
+    }
+
+    public static void setSum(double sum) {
+       Bill.sum+=Bill.placeValue;
+    }
+
+    public static double getPlaceValue() {
+        return placeValue;
+    }
+
+    public static void setPlaceValue(double placeValue) {
+        Bill.placeValue = placeValue;
+    }
+
+    public static double getCancelValue() {
+        return cancelValue;
+    }
+
+    public static void setCancelValue(double cancelValue) {
+        Bill.cancelValue = cancelValue;
+    }
+
+
+}
