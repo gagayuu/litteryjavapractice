@@ -1,0 +1,218 @@
+package ds.Sort;
+
+/**
+ * Author:gagayu
+ * Created:2019/4/25
+ */
+public class Sort {
+
+    //直接选择排序，不稳定（对数据不敏感：一堆海归选基友）
+    //找最大
+    private static int findMax(int[] array, int size) {
+        int max = array[0];
+        int pos = 0;
+        for (int i = 0; i < size; i++) {
+            if (array[i] > max) {
+                max = array[i];
+                pos = i;
+            }
+        }
+        return pos;
+    }
+
+    private static void selectSort(int[] array, int size) {
+        while (size > 1) {
+            int pos = findMax(array, size);
+            //交换
+            int tmp = array[pos];
+            array[pos] = array[size - 1];
+            array[size - 1] = tmp;
+            size--;
+        }
+    }
+
+    //冒泡，稳定
+    private static void bubble(int[] array, int size) {
+        for (int i = 0; i < size - 1; i++) {
+            if (array[i] > array[i + 1]) {
+                int tmp = array[i];
+                array[i] = array[i + 1];
+                array[i + 1] = tmp;
+            }
+        }
+    }
+
+    private static void bubbleSort(int[] array) {
+        for (int i = array.length; i >= 1; i--) {
+            bubble(array, i);
+        }
+    }
+
+    //插入排序，稳定(数据大致有序时性能好，在数据量<=20时,性能要高于快排)
+    private static void insert(int[] array, int n) {
+        int key = array[n];
+        int i = n;
+        while (i != 0 && array[i - 1] > key) {
+            array[i] = array[i - 1];
+            i--;
+        }
+
+        array[i] = key;
+
+    }
+
+    private static void insertionSort(int[] array, int size) {
+        for (int i = 1; i < size; i++) {
+            insert(array, i);
+        }
+    }
+
+    //希尔排序，不稳定
+
+
+    //堆排序，不稳定
+    private static void heapSort(int[] array, int size) {
+        //建堆(大堆)
+        createHeap(array);
+        for (int i = size - 1; i >= 0; i--) {
+            //交换根结点（最大值）和最后一个结点
+            int tmp = array[i];
+            array[i] = array[0];
+            array[0] = tmp;
+
+            //砍断最后一个结点并继续堆化，得到新的根结点（最大值）
+            heapify(array, 0, i);
+        }
+    }
+
+
+    private static void createHeap(int[] array) {
+        for (int i = (array.length - 2) / 2; i >= 0; i--) {
+            heapify(array, i, array.length);
+        }
+    }
+
+    private static void heapify(int[] array, int index, int size) {
+        int max = index * 2 + 1;
+        while (max < size) {
+            if (max + 1 < size && array[max + 1] > array[max]) {
+                max = max + 1;
+            }
+            if (array[index] >= array[max]) {
+                break;
+            }
+            int tmp = array[index];
+            array[index] = array[max];
+            array[max] = tmp;
+
+            index = max;
+            max = max * 2 + 1;
+
+        }
+    }
+
+
+    //归并排序，时间复杂度O(n*log(n))
+
+    /*
+    1.把数组平均分成两部分
+    2.分治算法分别对左右两部分做排序，直到区间size<=1,（实际上size不会=0）
+    3.合并两个有序数组，需要利用额外空间O(n)
+     */
+    private static void mergeSort(int[] array,int len){
+        int [] extra=new int[len];
+        mergeSortInner(array,0,len,extra);
+    }
+    private static void mergeSortInner(int[] array, int low, int high,int[] extra) {
+        if (low == high - 1) {
+            return;
+        }
+        if (low >= high) {
+            return;
+        }
+        int mid = (high + low)>>1;
+        mergeSortInner(array, low, mid,extra);
+        mergeSortInner(array, mid, high,extra);
+        merge(array, low, mid, high,extra);
+    }
+
+    private static void merge(int[] array, int low, int mid, int high,int [] extra) {
+        int i=low, j=mid, k=0;
+        while (i < mid && j < high){
+            if(array[i]<=array[j]){
+                extra[k++]=array[i++];
+            }else{
+                extra[k++]=array[j++];
+            }
+        }
+        while(i<mid){
+            extra[k++]=array[i++];
+        }
+        while(j<high){
+            extra[k++]=array[j++];
+        }
+
+        //把数据搬回array
+        //extra[0,high-low),array[low,high)
+       for(int t=low;t<high;t++){
+           array[t]=extra[t-low];
+       }
+    }
+
+
+    //快速排序,O(n*log(n)),不稳定,空间复杂度O(log(n))或O(n)
+    //选最边作为基准值时，数组已经有序或逆序，时间复杂度最坏O(n^2)，例如12345，pivot=5
+
+    /*
+    1.选基准值
+    2.partition
+    3.分治算法处理左右两个小区间,直到size==1或size==0
+     */
+    private static void quickSort(int[] array, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+        int pivot = partition(array, left, right);
+
+        quickSort(array, 0, pivot - 1);
+        quickSort(array, pivot + 1, right);
+    }
+
+    private static int partition(int[] array, int left, int right) {
+
+        int begin = left;
+        int end = right;
+        int pivot = array[end];
+        while (begin < end) {
+
+            while (begin < end && array[begin] <= pivot) {
+                begin++;
+            }
+
+            array[end] = array[begin];
+
+            while (begin < end && array[end] >= pivot) {
+                end--;
+            }
+
+            array[begin] = array[end];
+        }
+        array[begin] = pivot;
+        return begin;
+    }
+
+
+    public static void main(String[] args) {
+        int[] a = new int[]{3, 4, 7, 2, 6, 1};
+        //bubbleSort(a);
+        // selectSort(a,a.length);
+        //insertionSort(a, a.length);
+        // heapSort(a,a.length);
+        //quickSort(a, 0, a.length - 1);
+        mergeSort(a,a.length);
+        for (int i : a) {
+            System.out.print(i);
+        }
+
+    }
+}
