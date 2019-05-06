@@ -68,6 +68,31 @@ public class Sort {
     }
 
     //希尔排序，不稳定
+     private static void insertSortWithGap(int[] array, int gap) {
+        for (int i = 0; i < array.length; i++) {
+            int key = array[i];
+            int j = i - gap;
+            for (; j >= 0 && array[j] > key; j = j - gap) {
+                array[j + gap] = array[j];
+            }
+            array[j + gap] = key;
+        }
+    }
+
+    //做多次分组插排，分组间隔gap从大到小
+    private static void shellSort(int[] array) {
+        int gap = array.length;
+        while (true) {
+            gap = (gap / 3) + 1;
+            //gap=gap/2;
+
+            insertSortWithGap(array,gap);
+            if(gap==1){
+                break;
+            }
+        }
+    }
+
 
 
     //堆排序，不稳定
