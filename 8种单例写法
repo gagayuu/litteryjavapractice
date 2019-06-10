@@ -1,0 +1,137 @@
+概念：
+一个类只能产生一个实例化对象。
+
+单例的特点:
+构造方法私有化，外部无法通过构造方法创建对象，只能通过该类提供的可见静态方法得到该类对象。
+
+单例模式的8种写法：
+
+1，饿汉式（静态常量）[可用]
+
+class Singleton {
+    private final static Singleton instance = new Singleton();
+
+    //私有构造方法
+    private Singleton() {}
+
+    //获得该实例的方法，必须是可见的静态方法
+    public static Singleton getInstance() {
+        return instance;
+    }
+}
+
+public class TestSingleton {
+    public static void main(String[] args) {
+        //   Singleton instance=null;//声明对象
+        Singleton instance = Singleton.getInstance();
+    }
+}
+
+
+缺点：在类加载的时候就实例化对象，没有达到lazy Loading的效果。如果一直没用使用该类，就会造成内存浪费。
+
+2.饿汉式（静态代码块）[可用]
+
+class Singleton{
+    private final static Singleton instance;
+    //在类装载的时候就执行静态代码块中代码，初始化实例
+    static {
+        instance = new Singleton();
+    }
+    private Singleton(){}
+    public Singleton getInstance(){
+        return instance;
+    }
+}
+
+3.懒汉式（线程不安全）[不可用]
+
+public class Singleton{
+    private static Singleton instance;
+    private Singlton(){}
+    
+    public static Singleton getInstance(){
+        if(instance==null){
+            instance=new Singleton();
+        }
+       return instance;
+    }
+    
+}
+
+该方法起到lazy loading的作用，但是只能在单线程下使用。在多线程情况下，当一个线程进入if（）判断时还没来得及往下执行，其他线程也进入到该方法，这时就会产生多个实例，所以不能在多线程环境下使用该方法。
+
+4.懒汉式（线程安全，同步方法）[不推荐用]
+
+public class Singleton{
+    private static Singleton instance;
+    private Singleton(){}
+    public static synchronized Singleton getInstance(){
+        if(instance==null){
+            instance=new Singleton();
+        }
+        return instance;
+    }
+}
+
+这个方法对第三种方法进行了线程安全处理，给方法上加上synchronized关键字。但这样做效率太低，每个线程想获取实例时，都要进入getInstance（）方法。这个方法实际只需要进行一次，后面需要获取实例化对象，直接return就行，这样效率低下需要改进。
+
+5.懒汉式（线程安全，同步代码块）[不可用]
+
+public class Singleton{
+    private static Singleton instance;
+    private Singleton(){}
+    public static Singleton getInstance(){
+        synchronized(Singleton.class){
+            if(instance==null){
+            instance=new Singleton();
+            }
+            return instance;
+        }
+    }
+}
+
+由于上一种方法效率太低，所以我们采用同步代码块的方式。但这个方法实际不能起到同步作用，与第三种方法缺陷类似，当一个线程进入if()判断句后还没来得及往下执行，其他线程也进入到这个方法，这样就会产生不止一个实例化对象。
+
+6.懒汉式（双重检查 double check）[可用]
+
+public class Singleton{
+    private static volatile Singleton instance;
+    private Singleton(){}
+    public static Singleton getInstance(){
+        if(instance==null){
+            synchronized(Singleton.class){
+                if(instance==null){
+                    instance=new Singleton();
+                }
+            }
+            return instance;
+        }
+    }
+}
+我们进行两次if（）检查，这样就可以保证线程安全了。这样就可以实例化代码只进行一次，后面再要访问时，只要判断到if（instance==null）就会直接返回实例化对象。
+
+7.静态内部类[推荐使用]
+
+public class Singleton{
+    private Singleton(){}
+    private static class SingletonInstance{
+        private final static Singleton INSTANCE=new Singleton();
+    }
+    public static Singleton getInstance(){
+        return SingletonInstance.INSTANCE;
+    }
+}
+
+这种方式和饿汉式的机制相似，但又不同。饿汉式在类装载时就会实例化对象，没有起到 lazy loading 的效果，但这种方式在类装载时不会立即实例化对象，只有在调用getInstance()方法时才会调用静态内部类的实例化对象。由于静态内部类方法只会在第一次类加载时初始化，JVM帮助我们保证了线程安全。
+
+优点：延迟加载，效率高，线程安全。
+
+8，枚举[推荐用,亮点]
+
+public enum Singleton{
+    INSTANCE;
+    public void Method(){}
+}
+
+利用jdk1.5中添加的枚举来实现单例，不仅保证了线程安全，还能防止反序列化时重新被创建新对象。
