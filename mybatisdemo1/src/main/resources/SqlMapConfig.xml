@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="db.properties"/>
+
+<!--    <typeAliases>-->
+<!--       &lt;!&ndash;批量更改别名&ndash;&gt;-->
+<!--        <package name="com.gaga.po"/>-->
+<!--    </typeAliases>-->
+
+
+
+    <!-- 配置数据源相关信息 -->
+    <environments default="developer">
+        <environment id="developer">
+            <transactionManager type="JDBC"></transactionManager>
+            <dataSource type="POOLED">
+                <property name="driver" value="${jdbc.driver}"/>
+                <property name="url" value="${jdbc.url}"/>
+                <property name="username" value="${jdbc.username}"/>
+                <property name="password" value="${jdbc.password}"/>
+
+            </dataSource>
+        </environment>
+    </environments>
+
+
+
+
+    <mappers>
+        <mapper resource="sqlmap/user.xml"></mapper>
+    </mappers>
+</configuration>
