@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+做O到R的映射
+namespace:区分statement
+-->
+<mapper namespace="com.gaga.mapper.UserMapper">
+
+    <!--
+        parameterType; 输入参数，指的是sql语句的输入值
+        resultType: 输出参数，指的是sql语句执行完成后返回的结果值
+        id : 这个id不是普通的id,它标识整条sql语句执行的标识，我们叫做StatementID
+        #{} : 占位符,如果输入类型是基本类型则它的名字可以是value或者value之外的任何值
+              如果是引用类型，则只能是value
+        ${}：拼接字符串
+    \-->
+
+    <select id="queryUserById" parameterType="int" resultType="com.gaga.po.User">
+        select * from user where id=#{value};
+    </select>
+    <select id="queryUserByName" parameterType="java.lang.String" resultType="com.gaga.po.User">
+            select * from user where username like #{value};
+    </select>
+    <insert id="addUser" parameterType="com.gaga.po.User">
+    insert into user(username,birthday,sex,address)
+        value(#{username},#{birthday},#{sex},#{address});
+    </insert>
+    <delete id="deleteUser" parameterType="int">
+        delete from user where id=#{value};
+    </delete>
+    <update id="update" parameterType="com.gaga.po.User">
+         update user set username=#{username},birthday=null,sex=null,address=null
+                where id=#{id};
+    </update>
+
+
+    <!--User扩展多条件查询-->
+    <select id="queryUserByNameAndSex" parameterType="com.gaga.po.UserExtend" resultType="com.gaga.po.UserExtend">
+        select * from user where username like #{username} and sex=#{sex};
+    </select>
+
+    <!--动态sql    -->
+    <select id="queryUserByIds" parameterType="com.gaga.po.UserBZ" resultType="com.gaga.po.User">
+        select * from user
+        <where>
+            <if test="ids!=null">
+                <foreach collection="ids" item="everyId" open="(" close=")" separator="or">
+                    id=#{everyId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!--定义resultMap-->
+    <resultMap id="myResultMap" type="com.gaga.po.User">
+        <id column="id_" property="id"/>
+        <result column="username_" property="username"/>
+        <result column="sex_" property="sex"/>
+        <result column="address_" property="address"/>
+    </resultMap>
+<!-- 测试resultMap -->
+    <select id="testResultMap" parameterType="int" resultMap="myResultMap">
+         select id id_,username username_,sex sex_,address address_
+         from user where id=#{value};
+    </select>
+
+</mapper>

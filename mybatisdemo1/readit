@@ -1,0 +1,25 @@
+MyBatis API
+SqlSessionFactory -->SqlMapConfig.xml
+SqlSession,相当于Connection,
+Execute,执行器
+Statement,真正执行sql语句
+
+1.修改pom.xml文件加入mybatis和mysql的支持
+2.新建po对象(persistent object)
+3.配置SqlMapConfig.xml文件，配置数据源，添加数据库支持
+4.添加mapper.xml文件，并且将改文件加入到SqlMapConfig.xml文件中去
+
+
+在开发当中，只需要去写接口即可，接口的实现类与mybatis的动态代理对象去实现，
+但是需要遵循以下规则：
+1.mapper.xml文件中的namespace必须是接口所在包的全限定名
+2.接口的命名一xxxmapper结束
+3.接口中方法的名称是mapper.xml文件中statementID的名称
+4.接口方法的返回值是mapper.xml文件中statement resultType
+5.接口方法的参数是mapper.xml文件中statement parameterType
+
+
+mybatis基于mapper代理的方式开发的步骤：
+1.定义mapper(接口)
+2.定义xml
+3.测试

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gaga.mapper.OrderMapper">
+
+
+    <resultMap id="OUResultMap" type="com.gaga.po.OrdersExtend">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userid"/>
+        <result column="number" property="number"/>
+        <result column="createtime" property="createtime"/>
+        <result column="note" property="note"/>
+        <result column="user_username" property="username"/>
+        <result column="user_sex" property="sex"/>
+        <result column="user_address" property="address"/>
+    </resultMap>
+    <select id="queryOrderUser"  resultMap="OUResultMap">
+       select orders.*,
+	      user.username as user_username,
+          user.sex as user_sex,
+          user.address as user_address
+       from
+          user,orders
+       where
+          orders.user_id=user.id;
+    </select>
+
+    <resultMap id="OUResultMap01" type="com.gaga.po.Orders">
+        <id column="id" property="id"/>
+        <result column="" property="userid"/>
+        <result column="number" property="number"/>
+        <result column="createtime" property="createtime"/>
+        <result column="note" property="note"/>
+        <association property="user" javaType="com.gaga.po.User">
+            <id column="user_id" property="id"/>
+            <result column="user_username" property="username"/>
+            <result column="user_sex" property="sex"/>
+            <result column="user_address" property="address"/>
+        </association>
+    </resultMap>
+    <select id="queryOrderUser01"  resultMap="OUResultMap01">
+       select orders.*,
+	      user.username as user_username,
+          user.sex as user_sex,
+          user.address as user_address
+       from
+          user,orders
+       where
+          orders.user_id=user.id;
+    </select>
+
+
+
+    <resultMap id="OOResultMap" type="com.gaga.po.Orders">
+        <id column="id" property="id"/>
+        <result column="" property="userid"/>
+        <result column="number" property="number"/>
+        <result column="createtime" property="createtime"/>
+        <result column="note" property="note"/>
+<!--  1:1   -->
+        <association property="user" javaType="com.gaga.po.User">
+            <id column="user_id" property="id"/>
+            <result column="user_username" property="username"/>
+            <result column="user_sex" property="sex"/>
+            <result column="user_address" property="address"/>
+        </association>
+<!-- 1:m   -->
+        <collection property="orderdetailList" ofType="com.gaga.po.Orderdetail">
+            <id column="orderdetail_id" property="id"/>
+        </collection>
+    </resultMap>
+    <select id="queryOO"  resultMap="OOResultMap">
+       select orders.*,
+	      user.username as user_username,
+          user.sex as user_sex,
+          user.address as user_address,
+          orderdetail.id as orderdetail_id
+       from
+          user,orders,orderdetail
+       where
+          orders.user_id=user.id and orders.id=orderdetail.id;
+    </select>
+
+</mapper>
