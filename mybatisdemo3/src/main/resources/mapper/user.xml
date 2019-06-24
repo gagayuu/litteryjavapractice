@@ -29,7 +29,7 @@ namespace:区分statement
     <delete id="deleteUser" parameterType="int">
         delete from user where id=#{value};
     </delete>
-    <update id="modifyUser" parameterType="com.gaga.po.User">
+    <update id="update" parameterType="com.gaga.po.User">
          update user set username=#{username},birthday=null,sex=null,address=null
                 where id=#{id};
     </update>
